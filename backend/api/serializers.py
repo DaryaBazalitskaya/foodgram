@@ -257,9 +257,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         )
 
     def get_image_url(self, obj):
-        if obj.image:
-            return obj.image.url
-        return None
+        return obj.image.url
 
     def create(self, validated_data):
         tags = validated_data.pop('tags')

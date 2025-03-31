@@ -133,7 +133,7 @@ class Recipe(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return f'/api/recipes/{self.pk}/'
+        return f'/recipes/{self.pk}/'
 
 
 class RecipeIngredient(models.Model):
