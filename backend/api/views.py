@@ -165,6 +165,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeReadSerializer
         return RecipeSerializer
 
+    def get_serializer_context(self):
+        return {'request': self.request}
+
     @action(
         detail=True,
         methods=['post', 'delete'],
