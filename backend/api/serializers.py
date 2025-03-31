@@ -257,10 +257,9 @@ class RecipeSerializer(serializers.ModelSerializer):
         )
 
     def get_image_url(self, obj):
-        request = self.context.get('request')
-        if request:
-            return request.build_absolute_uri(obj.image.url)
-        return obj.image.url
+        if obj.image:
+            return obj.image.url
+        return None
 
     def create(self, validated_data):
         tags = validated_data.pop('tags')
