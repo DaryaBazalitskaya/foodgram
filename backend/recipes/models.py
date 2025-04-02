@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.validators import (MaxLengthValidator, MaxValueValidator,
                                     MinValueValidator)
@@ -133,7 +134,7 @@ class Recipe(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return f'/recipes/{self.pk}/'
+        return f'{settings.SITE_URL_PREFIX}recipes/{self.pk}/'
 
 
 class RecipeIngredient(models.Model):
