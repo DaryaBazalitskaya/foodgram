@@ -305,8 +305,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
     )
     def get_link(self, request, pk=None):
         """Получение короткой ссылки на рецепт."""
+        recipe = self.get_object()
         long_url = request.build_absolute_uri(
-            settings.API_URL_PREFIX + f'recipes/{self.get_object().pk}/'
+            settings.SITE_URL_PREFIX + f'recipes/{recipe.pk}/'
         )
         try:
             # Используем tinyurl для создания короткой ссылки.
