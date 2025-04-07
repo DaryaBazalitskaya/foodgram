@@ -1,13 +1,13 @@
-from django.conf import settings
-from django.contrib.auth import get_user_model
-from django.core.validators import (MaxLengthValidator, MaxValueValidator,
-                                    MinValueValidator)
-from django.db import models
-from django.template.defaultfilters import slugify
+import uuid
 
-from .constants import (MAX_COOKING_TIME, MAX_INGREDIENT_AMOUNT,
-                        MAX_INGREDIENT_LENGTH, MAX_MEASUREMENT_UNIT,
-                        MIN_AMOUNT_TIME, NAME_MAX_LENGTH, TAG_MAX_LENGTH)
+from django.contrib.auth import get_user_model
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
+
+from .constants import (LINK_MAX_LENGTH, MAX_COOKING_TIME,
+                        MAX_INGREDIENT_AMOUNT, MAX_INGREDIENT_LENGTH,
+                        MAX_MEASUREMENT_UNIT, MIN_AMOUNT_TIME, NAME_MAX_LENGTH,
+                        TAG_MAX_LENGTH)
 
 User = get_user_model()
 
@@ -16,14 +16,12 @@ class Tag(models.Model):
     name = models.CharField(
         verbose_name='Тег',
         max_length=TAG_MAX_LENGTH,
-        validators=(MaxLengthValidator,),
         unique=True,
         help_text='Укажите название тега'
     )
     slug = models.SlugField(
         verbose_name='Слаг',
         max_length=TAG_MAX_LENGTH,
-        validators=(MaxLengthValidator,),
         unique=True,
         help_text='Укажите слаг'
     )
@@ -35,25 +33,18 @@ class Tag(models.Model):
         default_related_name = 'tags'
 
     def __str__(self):
-        return self.name
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
+        return f'{self._meta.verbose_name}: {self.name}'
 
 
 class Ingredient(models.Model):
     name = models.CharField(
         verbose_name='Ингредиент',
         max_length=MAX_INGREDIENT_LENGTH,
-        validators=(MaxLengthValidator,),
         help_text='Укажите ингредиент'
     )
     measurement_unit = models.CharField(
         verbose_name='Единица измерения',
         max_length=MAX_MEASUREMENT_UNIT,
-        validators=(MaxLengthValidator,),
         help_text='Укажите единицу измерения'
     )
 
@@ -70,7 +61,7 @@ class Ingredient(models.Model):
         ]
 
     def __str__(self):
-        return self.name
+        return f'{self.name} ({self.measurement_unit})'
 
 
 class Recipe(models.Model):
@@ -82,17 +73,22 @@ class Recipe(models.Model):
     name = models.CharField(
         verbose_name='Рецепт',
         max_length=NAME_MAX_LENGTH,
-        validators=(MaxLengthValidator,),
         help_text='Укажите название рецепта'
     )
     text = models.TextField(
         verbose_name='Описание рецепта',
         help_text='Добавьте описание рецепта'
     )
-    cooking_time = models.PositiveIntegerField(
+    cooking_time = models.PositiveSmallIntegerField(
         validators=(
-            MaxValueValidator(MAX_COOKING_TIME),
-            MinValueValidator(MIN_AMOUNT_TIME)
+            MaxValueValidator(
+                MAX_COOKING_TIME,
+                f'Значение времени приготовления превышает {MAX_COOKING_TIME}'
+            ),
+            MinValueValidator(
+                MIN_AMOUNT_TIME,
+                f'Значение времени приготовления меньше {MIN_AMOUNT_TIME}'
+            )
         ),
         verbose_name='Время приготовления',
         help_text='Укажите время приготовления (не менее 1 минуты)'
@@ -117,6 +113,13 @@ class Recipe(models.Model):
         verbose_name='Дата публикации',
         auto_now_add=True
     )
+    short_url = models.CharField(
+        verbose_name='Короткая ссылка',
+        max_length=LINK_MAX_LENGTH,
+        blank=True,
+        unique=True,
+        null=True,
+    )
 
     class Meta:
         ordering = ('-created_at',)
@@ -130,11 +133,19 @@ class Recipe(models.Model):
             )
         ]
 
-    def __str__(self):
-        return self.name
+    def save(self, *args, **kwargs):
+        if not self.short_url:
+            self.short_url = self.generate_short_url()
+            while Recipe.objects.filter(short_url=self.short_url).exists():
+                self.short_url = self.generate_short_url()
+        super().save(*args, **kwargs)
 
-    def get_absolute_url(self):
-        return f'{settings.SITE_URL_PREFIX}recipes/{self.pk}/'
+    def generate_short_url(self):
+        """Функция создает короткую ссылку."""
+        return str(uuid.uuid4())[:8]
+
+    def __str__(self):
+        return f'Рецепт "{self.name}" (автор: {self.author.username})'
 
 
 class RecipeIngredient(models.Model):
@@ -150,8 +161,14 @@ class RecipeIngredient(models.Model):
     )
     amount = models.PositiveSmallIntegerField(
         validators=(
-            MaxValueValidator(MAX_INGREDIENT_AMOUNT),
-            MinValueValidator(MIN_AMOUNT_TIME)
+            MaxValueValidator(
+                MAX_INGREDIENT_AMOUNT,
+                f'Количество ингредиента превышает {MAX_INGREDIENT_AMOUNT}'
+            ),
+            MinValueValidator(
+                MIN_AMOUNT_TIME,
+                f'Значение времени приготовления меньше {MIN_AMOUNT_TIME}'
+            )
         ),
         verbose_name='Количество ингредиента в рецепте',
         help_text='Укажите количество'
@@ -161,12 +178,6 @@ class RecipeIngredient(models.Model):
         verbose_name = 'Ингредиент рецепта'
         verbose_name_plural = 'Ингредиенты рецепта'
         default_related_name = 'ingredient_recipe'
-        constraints = [
-            models.UniqueConstraint(
-                fields=('recipe', 'ingredient'),
-                name='unique_recipe_ingredient_pair'
-            )
-        ]
 
     def __str__(self):
         return (
@@ -193,7 +204,7 @@ class UserRecipeBaseModel(models.Model):
 
     def __str__(self):
         return (
-            f' {self.user.username} добавил {self.recipe} в '
+            f'{self.user.username} добавил {self.recipe} в '
             f'{self._meta.verbose_name}'
         )
 

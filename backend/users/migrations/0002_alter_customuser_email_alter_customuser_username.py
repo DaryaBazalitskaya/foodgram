@@ -3,7 +3,7 @@
 import django.core.validators
 from django.db import migrations, models
 
-import users.validators
+# import users.validators
 
 
 class Migration(migrations.Migration):
@@ -16,11 +16,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='customuser',
             name='email',
-            field=models.EmailField(help_text='Укажите e-mail', max_length=254, unique=True, validators=[django.core.validators.MaxLengthValidator, users.validators.validate_email], verbose_name='Email'),
+            field=models.EmailField(help_text='Укажите e-mail', max_length=254, unique=True, validators=[django.core.validators.MaxLengthValidator,], verbose_name='Email'),
         ),
         migrations.AlterField(
             model_name='customuser',
             name='username',
-            field=models.CharField(help_text='Укажите логин пользователя', max_length=150, unique=True, validators=[django.core.validators.MaxLengthValidator, users.validators.validate_username], verbose_name='Логин'),
+            field=models.CharField(help_text='Укажите логин пользователя', max_length=150, unique=True, validators=[django.core.validators.MaxLengthValidator,], verbose_name='Логин'),
         ),
     ]

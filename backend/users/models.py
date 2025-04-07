@@ -1,48 +1,46 @@
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MaxLengthValidator
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 
-from .constants import EMAIL_MAX_LENGTH, NAME_MAX_LENGTH
-from .validators import validate_email, validate_username
+from .constants import NAME_MAX_LENGTH
 
 
 class CustomUser(AbstractUser):
     email = models.EmailField(
         verbose_name='Email',
-        max_length=EMAIL_MAX_LENGTH,
-        validators=(
-            MaxLengthValidator, validate_email
-        ),
         unique=True,
-        help_text='Укажите e-mail'
+        help_text=(
+            'Укажите e-mail. '
+            'E-mail не должен превышать 254 символов.'
+        )
     )
     username = models.CharField(
         verbose_name='Логин',
         max_length=NAME_MAX_LENGTH,
-        validators=(
-            MaxLengthValidator, validate_username
-        ),
+        validators=(UnicodeUsernameValidator(),),
         unique=True,
-        help_text='Укажите логин пользователя'
+        help_text=(
+            'Укажите логин пользователя. '
+            'Используйте буквы, цифры и символы @/./+/-/_. '
+            'Логин не может начинаться цифрой и превышать 150 символов.'
+        )
     )
     first_name = models.CharField(
         verbose_name='Имя',
         max_length=NAME_MAX_LENGTH,
-        validators=(MaxLengthValidator,),
-        help_text='Укажите имя'
+        help_text='Укажите имя.'
     )
     last_name = models.CharField(
         verbose_name='Фамилия',
         max_length=NAME_MAX_LENGTH,
-        validators=(MaxLengthValidator,),
-        help_text='Укажите фамилию'
+        help_text='Укажите фамилию.'
     )
     avatar = models.ImageField(
         verbose_name='Фото профиля',
         upload_to='users/',
         null=True,
         blank=True,
-        help_text='Добавьте фото профиля'
+        help_text='Добавьте фото профиля.'
     )
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ('username', 'first_name', 'last_name')
