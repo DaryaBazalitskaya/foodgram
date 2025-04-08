@@ -105,7 +105,7 @@ class FoodgramUserViewSet(UserViewSet):
     def subscriptions(self, request):
         """Получение списка подписок пользователя."""
         paginator = self.pagination_class()
-        queryset = User.objects.filter(followers__user=request.user)
+        queryset = User.objects.filter(followings__user=request.user)
         result_page = paginator.paginate_queryset(queryset, request)
         serializer = UserSubscriptionsListSerializer(
             result_page, many=True, context={'request': request}
@@ -256,8 +256,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def get_link(self, request, pk=None):
         """Получение короткой ссылки на рецепт."""
         recipe = self.get_object()
+        if not recipe.short_url:
+            recipe.short_url = recipe.generate_short_url()
+            recipe.save()
         short_link = request.build_absolute_uri(
-            f'{settings.SITE_URL_PREFIX}/recipes/{recipe.short_url}/'
+            f'{settings.SITE_URL_PREFIX}r/{recipe.short_url}/'
         )
         return Response({'short-link': short_link}, status=status.HTTP_200_OK)
 

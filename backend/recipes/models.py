@@ -133,16 +133,18 @@ class Recipe(models.Model):
             )
         ]
 
-    def save(self, *args, **kwargs):
-        if not self.short_url:
-            self.short_url = self.generate_short_url()
-            while Recipe.objects.filter(short_url=self.short_url).exists():
-                self.short_url = self.generate_short_url()
-        super().save(*args, **kwargs)
-
     def generate_short_url(self):
         """Функция создает короткую ссылку."""
         return str(uuid.uuid4())[:8]
+
+    def save(self, *args, **kwargs):
+        """Переопределяем метод save для генерации short_url."""
+        if not self.pk:
+            if not self.short_url:
+                self.short_url = self.generate_short_url()
+                while Recipe.objects.filter(short_url=self.short_url).exists():
+                    self.short_url = self.generate_short_url()
+            super().save(*args, **kwargs)
 
     def __str__(self):
         return f'Рецепт "{self.name}" (автор: {self.author.username})'
