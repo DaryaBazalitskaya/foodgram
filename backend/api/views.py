@@ -105,8 +105,13 @@ class FoodgramUserViewSet(UserViewSet):
     def subscriptions(self, request):
         """Получение списка подписок пользователя."""
         paginator = self.pagination_class()
-        queryset = User.objects.filter(followings__user=request.user)
-        result_page = paginator.paginate_queryset(queryset, request)
+        subscriptions = request.user.followers.all()
+        followings = [subscription.following for subscription in subscriptions]
+        result_page = paginator.paginate_queryset(
+            followings, request
+        )
+        # queryset = User.objects.filter(followings__user=request.user)
+        # result_page = paginator.paginate_queryset(queryset, request)
         serializer = UserSubscriptionsListSerializer(
             result_page, many=True, context={'request': request}
         )
