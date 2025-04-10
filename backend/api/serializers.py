@@ -250,6 +250,18 @@ class IngredientAmountSerializer(serializers.ModelSerializer):
         model = RecipeIngredient
         fields = ('id', 'amount')
 
+    def to_internal_value(self, data):
+        """Преобразование данных для валидации."""
+        ingredient_id = data.get('id')
+        amount = data.get('amount')
+        try:
+            amount = int(amount)
+        except (TypeError, ValueError):
+            raise serializers.ValidationError(
+                {'amount': 'Количество должно быть числом.'}
+            )
+        return {'id': ingredient_id, 'amount': amount}
+
     def validate(self, data):
         amount = data.get('amount')
         try:
@@ -266,12 +278,6 @@ class IngredientAmountSerializer(serializers.ModelSerializer):
             )
         data['ingredient'] = ingredient
         return data
-
-    def to_internal_value(self, data):
-        """Преобразование данных для валидации."""
-        ingredient_id = data.get('id')
-        amount = data.get('amount')
-        return {'id': ingredient_id, 'amount': amount}
 
 
 class RecipeCreateSerializer(serializers.ModelSerializer):
