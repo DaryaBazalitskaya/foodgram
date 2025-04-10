@@ -256,9 +256,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def get_link(self, request, pk=None):
         """Получение короткой ссылки на рецепт."""
         recipe = self.get_object()
-        if not recipe.short_url:
-            recipe.short_url = recipe.generate_short_url()
-            recipe.save()
+        # if not recipe.short_url:
+        #     recipe.short_url = recipe.generate_short_url()
+        #     recipe.save()
         short_link = request.build_absolute_uri(
             f'{settings.SITE_URL_PREFIX}r/{recipe.short_url}/'
         )

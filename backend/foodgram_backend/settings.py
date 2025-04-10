@@ -64,20 +64,7 @@ WSGI_APPLICATION = 'foodgram_backend.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB', 'django'),
-        'USER': os.getenv('POSTGRES_USER', 'django'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
-        'HOST': os.getenv('DB_HOST', ''),
-        'PORT': os.getenv('DB_PORT', 5432)
-    }
-}
-
-# DATABASE_ENGINE = os.getenv('DATABASE_ENGINE', 'POSTGRESQL_DB') == 'True'
-
-# POSTGRESQL_DB = {
+# DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
 #         'NAME': os.getenv('POSTGRES_DB', 'django'),
@@ -88,12 +75,29 @@ DATABASES = {
 #     }
 # }
 
-# SQLITE_DB = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+# DATABASE_ENGINE = os.getenv('DATABASE_ENGINE', 'POSTGRESQL_DB') == 'True'
+
+DATABASE_ENGINE = os.getenv('DATABASE_ENGINE', '').upper()
+
+POSTGRESQL_DB = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB', 'django'),
+        'USER': os.getenv('POSTGRES_USER', 'django'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', ''),
+        'PORT': os.getenv('DB_PORT', 5432)
+    }
+}
+
+SQLITE_DB = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+DATABASES = POSTGRESQL_DB if DATABASE_ENGINE == 'POSTGRESQL_DB' else SQLITE_DB
 
 # DATABASES = POSTGRESQL_DB if DATABASE_ENGINE else SQLITE_DB
 

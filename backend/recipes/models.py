@@ -144,7 +144,7 @@ class Recipe(models.Model):
                 self.short_url = self.generate_short_url()
                 while Recipe.objects.filter(short_url=self.short_url).exists():
                     self.short_url = self.generate_short_url()
-            super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'Рецепт "{self.name}" (автор: {self.author.username})'
