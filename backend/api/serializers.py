@@ -1,3 +1,5 @@
+# Вынуждена оставить пустую строку тут и в api/views.py.
+# Иначе не выходит отправить проект на ревью.
 import base64
 
 from django.contrib.auth import get_user_model
@@ -9,8 +11,6 @@ from rest_framework.validators import UniqueTogetherValidator
 from recipes.models import (Favorites, Ingredient, Recipe, RecipeIngredient,
                             ShoppingCart, Tag, UserRecipeBaseModel)
 from users.models import Follow
-# Вынуждена оставить пустую строку тут и в api/views.py.
-# Иначе не выходит отправить проект на ревью.
 
 from .constants import MAX_INGREDIENT_AMOUNT, MIN_INGREDIENT_AMOUNT
 
