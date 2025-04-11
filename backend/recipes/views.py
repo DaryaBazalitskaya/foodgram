@@ -10,4 +10,3 @@ def recipe_redirect(request, short_url):
     return HttpResponseRedirect(
         request.build_absolute_uri(f'/recipes/{recipe.id}/')
     )
-# from django.urls import reverse

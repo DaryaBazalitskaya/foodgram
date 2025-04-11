@@ -7,8 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', get_random_secret_key())
 
-DEBUG = True
-# DEBUG = os.getenv('DEBUG', default=False) == 'True'
+DEBUG = os.getenv('DEBUG', default=False) == 'True'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='*').split(',')
 
@@ -58,14 +57,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'foodgram_backend.wsgi.application'
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASE_ENGINE = os.getenv('DATABASE_ENGINE', default=False) is True
 
-DATABASES = {
+SQLITE_DB = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+POSTGRESQL_DB = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('POSTGRES_DB', 'django'),
@@ -75,6 +76,9 @@ DATABASES = {
         'PORT': os.getenv('DB_PORT', 5432)
     }
 }
+
+DATABASES = SQLITE_DB if DATABASE_ENGINE else POSTGRESQL_DB
+
 
 # DATABASE_ENGINE = os.getenv('DATABASE_ENGINE', default=POSTGRESQL_DB) == 'True'
 
@@ -100,7 +104,7 @@ DATABASES = {
 
 # DATABASES = POSTGRESQL_DB if DATABASE_ENGINE == 'POSTGRESQL_DB' else SQLITE_DB
 
-# DATABASES = POSTGRESQL_DB if DATABASE_ENGINE else SQLITE_DB
+
 
 # if DATABASE_ENGINE == 'sqlite':
 #     DATABASES = {
