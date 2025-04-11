@@ -79,51 +79,6 @@ POSTGRESQL_DB = {
 
 DATABASES = SQLITE_DB if DATABASE_ENGINE else POSTGRESQL_DB
 
-# DATABASE_ENGINE = os.getenv('DATABASE_ENGINE', default=POSTGRESQL_DB) == 'True'
-
-# DATABASE_ENGINE = os.getenv('DATABASE_ENGINE', '').upper()
-
-# POSTGRESQL_DB = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.getenv('POSTGRES_DB', 'django'),
-#         'USER': os.getenv('POSTGRES_USER', 'django'),
-#         'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
-#         'HOST': os.getenv('DB_HOST', ''),
-#         'PORT': os.getenv('DB_PORT', 5432)
-#     }
-# }
-
-# SQLITE_DB = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-# DATABASES = POSTGRESQL_DB if DATABASE_ENGINE == 'POSTGRESQL_DB' else SQLITE_DB
-
-# if DATABASE_ENGINE == 'sqlite':
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.sqlite3',
-#             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#         }
-#     }
-# elif DATABASE_ENGINE == 'postgresql':
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.postgresql',
-#             'NAME': os.getenv('POSTGRES_DB', 'django'),
-#             'USER': os.getenv('POSTGRES_USER', 'django'),
-#             'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
-#             'HOST': os.getenv('DB_HOST', ''),
-#             'PORT': os.getenv('DB_PORT', '5432')
-#         }
-#     }
-# else:
-#     raise ValueError('Неизвестный тип базы данных в DATABASE_ENGINE')
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
