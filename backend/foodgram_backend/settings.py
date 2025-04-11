@@ -79,7 +79,6 @@ POSTGRESQL_DB = {
 
 DATABASES = SQLITE_DB if DATABASE_ENGINE else POSTGRESQL_DB
 
-
 # DATABASE_ENGINE = os.getenv('DATABASE_ENGINE', default=POSTGRESQL_DB) == 'True'
 
 # DATABASE_ENGINE = os.getenv('DATABASE_ENGINE', '').upper()
@@ -104,8 +103,6 @@ DATABASES = SQLITE_DB if DATABASE_ENGINE else POSTGRESQL_DB
 
 # DATABASES = POSTGRESQL_DB if DATABASE_ENGINE == 'POSTGRESQL_DB' else SQLITE_DB
 
-
-
 # if DATABASE_ENGINE == 'sqlite':
 #     DATABASES = {
 #         'default': {
@@ -126,7 +123,6 @@ DATABASES = SQLITE_DB if DATABASE_ENGINE else POSTGRESQL_DB
 #     }
 # else:
 #     raise ValueError('Неизвестный тип базы данных в DATABASE_ENGINE')
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
