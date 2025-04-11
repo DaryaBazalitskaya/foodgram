@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', get_random_secret_key())
 
-DEBUG = os.getenv('DEBUG', default=False) == 'True'
+DEBUG = os.getenv('DEBUG', default=False) is True
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='*').split(',')
 
@@ -153,7 +153,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'collected_static'
 
-MEDIA_URL = '/media/'  # 'https://myfoodgram.sytes.net
+MEDIA_URL = 'https://myfoodgram.sytes.net/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
