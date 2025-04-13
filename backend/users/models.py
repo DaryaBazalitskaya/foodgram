@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 
-from .constants import NAME_MAX_LENGTH
+from .constants import USERS_NAME_MAX_LENGTH
 
 
 class CustomUser(AbstractUser):
@@ -16,7 +16,7 @@ class CustomUser(AbstractUser):
     )
     username = models.CharField(
         verbose_name='Логин',
-        max_length=NAME_MAX_LENGTH,
+        max_length=USERS_NAME_MAX_LENGTH,
         validators=(UnicodeUsernameValidator(),),
         unique=True,
         help_text=(
@@ -27,12 +27,12 @@ class CustomUser(AbstractUser):
     )
     first_name = models.CharField(
         verbose_name='Имя',
-        max_length=NAME_MAX_LENGTH,
+        max_length=USERS_NAME_MAX_LENGTH,
         help_text='Укажите имя.'
     )
     last_name = models.CharField(
         verbose_name='Фамилия',
-        max_length=NAME_MAX_LENGTH,
+        max_length=USERS_NAME_MAX_LENGTH,
         help_text='Укажите фамилию.'
     )
     avatar = models.ImageField(

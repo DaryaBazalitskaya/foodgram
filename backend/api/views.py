@@ -12,20 +12,19 @@ from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 
+from api.filters import IngredientFilter, RecipeFilter
+from api.pagination import RecipesPagination
+from api.permissions import IsAuthorOrReadOnly
+from api.serializers import (FavoritesSerializer, FollowSerializer,
+                             IngredientSerializer, RecipeCreateSerializer,
+                             RecipeReadSerializer, ShoppingCartSerializer,
+                             TagSerializer, UserAvatarSerializer,
+                             UserListSerializer, UserReadSerializer,
+                             UserSubscriptionsListSerializer)
+from api.viewsets import TagIngredientBaseViewSet
 from recipes.models import (Favorites, Ingredient, Recipe, RecipeIngredient,
                             ShoppingCart, Tag)
 from users.models import Follow
-
-from .filters import IngredientFilter, RecipeFilter
-from .pagination import RecipesPagination
-from .permissions import IsAuthorOrReadOnly
-from .serializers import (FavoritesSerializer, FollowSerializer,
-                          IngredientSerializer, RecipeCreateSerializer,
-                          RecipeReadSerializer, ShoppingCartSerializer,
-                          TagSerializer, UserAvatarSerializer,
-                          UserListSerializer, UserReadSerializer,
-                          UserSubscriptionsListSerializer)
-from .viewsets import TagIngredientBaseViewSet
 
 User = get_user_model()
 

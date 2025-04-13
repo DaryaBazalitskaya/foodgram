@@ -139,11 +139,12 @@ class Recipe(models.Model):
 
     def save(self, *args, **kwargs):
         """Переопределяем метод save для генерации short_url."""
-        if not self.pk:
-            if not self.short_url:
-                self.short_url = self.generate_short_url()
-                while Recipe.objects.filter(short_url=self.short_url).exists():
-                    self.short_url = self.generate_short_url()
+        if not self.short_url:
+            while True:
+                short_url = self.generate_short_url()
+                if not Recipe.objects.filter(short_url=short_url).exists():
+                    self.short_url = short_url
+                    break
         super().save(*args, **kwargs)
 
     def __str__(self):

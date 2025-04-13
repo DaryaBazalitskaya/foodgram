@@ -1,5 +1,3 @@
-# Вынуждена оставить пустую строку тут и в api/views.py.
-# Иначе не выходит отправить проект на ревью.
 import base64
 
 from django.contrib.auth import get_user_model
@@ -11,8 +9,6 @@ from rest_framework.validators import UniqueTogetherValidator
 from recipes.models import (Favorites, Ingredient, Recipe, RecipeIngredient,
                             ShoppingCart, Tag, UserRecipeBaseModel)
 from users.models import Follow
-
-from .constants import MAX_INGREDIENT_AMOUNT, MIN_INGREDIENT_AMOUNT
 
 User = get_user_model()
 
@@ -252,35 +248,6 @@ class IngredientAmountSerializer(serializers.ModelSerializer):
     class Meta:
         model = RecipeIngredient
         fields = ('id', 'amount')
-
-    def to_internal_value(self, data):
-        """Преобразование данных для валидации."""
-        ingredient_id = data.get('id')
-        amount = data.get('amount')
-        try:
-            amount = int(amount)
-        except (TypeError, ValueError):
-            raise serializers.ValidationError(
-                {'amount': 'Количество должно быть числом.'}
-            )
-        return {'id': ingredient_id, 'amount': amount}
-
-    def validate(self, data):
-        amount = data.get('amount')
-        try:
-            ingredient = Ingredient.objects.get(pk=data.get('id'))
-        except Ingredient.DoesNotExist:
-            raise serializers.ValidationError({'id': 'Ингредиент не найден.'})
-        if amount is None:
-            raise serializers.ValidationError(
-                {'amount': 'Укажите количество ингредиента.'}
-            )
-        if amount < MIN_INGREDIENT_AMOUNT or amount > MAX_INGREDIENT_AMOUNT:
-            raise serializers.ValidationError(
-                {'amount': 'Укажите число в пределах [1; 10000].'}
-            )
-        data['ingredient'] = ingredient
-        return data
 
 
 class RecipeCreateSerializer(serializers.ModelSerializer):

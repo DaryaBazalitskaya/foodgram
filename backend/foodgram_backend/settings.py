@@ -2,6 +2,9 @@ import os
 from pathlib import Path
 
 from django.core.management.utils import get_random_secret_key
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -57,7 +60,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'foodgram_backend.wsgi.application'
 
-DATABASE_ENGINE = os.getenv('DATABASE_ENGINE', default=False) is True
+DATABASE_ENGINE = os.getenv('DATABASE_ENGINE', default=False) == 'True'
 
 SQLITE_DB = {
     'default': {
@@ -138,7 +141,6 @@ DJOSER = {
     'HIDE_USERS': False,
     'SERIALIZERS': {
         'user': 'api.serializers.UserReadSerializer',
-        'user_create': 'djoser.serializers.UserCreateSerializer',
         'current_user': 'api.serializers.UserReadSerializer',
     },
     'PERMISSIONS': {
